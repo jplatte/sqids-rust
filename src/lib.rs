@@ -135,7 +135,7 @@ impl Default for Sqids {
 #[derive(Default)]
 pub struct SqidsBuilder {
 	alphabet: Option<Vec<char>>,
-	min_length: Option<u8>,
+	min_length: u8,
 	blocklist: Option<HashSet<String>>,
 }
 
@@ -152,7 +152,7 @@ impl SqidsBuilder {
 
 	/// The minimum length of a sqid.
 	pub fn min_length(self, value: u8) -> Self {
-		Self { min_length: Some(value), ..self }
+		Self { min_length: value, ..self }
 	}
 
 	/// Blocklist. When creating a sqid strings that begins
@@ -199,7 +199,7 @@ impl SqidsBuilder {
 
 		Ok(Sqids {
 			alphabet: Sqids::shuffle(&alphabet),
-			min_length: self.min_length.unwrap_or(0),
+			min_length: self.min_length,
 			blocklist: filtered_blocklist,
 		})
 	}
