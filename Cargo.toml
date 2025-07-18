@@ -11,4 +11,3 @@ readme = "README.md"
 keywords = ["ids", "encode", "short", "sqids", "hashids"]
 
 [dependencies]
-thiserror = "2.0.9"

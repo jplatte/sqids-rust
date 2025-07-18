@@ -10,12 +10,10 @@
 /// **Note**: This is the crate's license and not an actual item.
 pub const LICENSE: () = ();
 
-use std::{cmp::min, collections::HashSet, result};
-
-use thiserror::Error;
+use std::{cmp::min, collections::HashSet, fmt, result};
 
 /// sqids Error type.
-#[derive(Error, Debug, Eq, PartialEq)]
+#[derive(Debug, Eq, PartialEq)]
 pub enum Error {
 	/// Alphabet cannot contain multibyte characters
 	///
@@ -24,7 +22,6 @@ pub enum Error {
 	/// let error = Sqids::builder().alphabet("☃️🦀🔥".chars().collect()).build().unwrap_err();
 	/// assert_eq!(error, Error::AlphabetMultibyteCharacters);
 	/// ```
-	#[error("Alphabet cannot contain multibyte characters")]
 	AlphabetMultibyteCharacters,
 	/// Alphabet length must be at least 3
 	///
@@ -33,7 +30,6 @@ pub enum Error {
 	/// let error = Sqids::builder().alphabet("ab".chars().collect()).build().unwrap_err();
 	/// assert_eq!(error, Error::AlphabetLength);
 	/// ```
-	#[error("Alphabet length must be at least 3")]
 	AlphabetLength,
 	/// Alphabet must contain unique characters
 	///
@@ -42,7 +38,6 @@ pub enum Error {
 	/// let error = Sqids::builder().alphabet("aba".chars().collect()).build().unwrap_err();
 	/// assert_eq!(error, Error::AlphabetUniqueCharacters);
 	/// ```
-	#[error("Alphabet must contain unique characters")]
 	AlphabetUniqueCharacters,
 	/// Reached max attempts to re-generate the ID
 	///
@@ -57,9 +52,27 @@ pub enum Error {
 	/// let error = sqids.encode(&[1]).unwrap_err();
 	/// assert_eq!(error, Error::BlocklistMaxAttempts);
 	/// ```
-	#[error("Reached max attempts to re-generate the ID")]
 	BlocklistMaxAttempts,
 }
+
+impl fmt::Display for Error {
+	fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
+		match self {
+			Error::AlphabetMultibyteCharacters => {
+				f.write_str("Alphabet cannot contain multibyte characters")
+			}
+			Error::AlphabetLength => f.write_str("Alphabet length must be at least 3"),
+			Error::AlphabetUniqueCharacters => {
+				f.write_str("Alphabet must contain unique characters")
+			}
+			Error::BlocklistMaxAttempts => {
+				f.write_str("Reached max attempts to re-generate the ID")
+			}
+		}
+	}
+}
+
+impl std::error::Error for Error {}
 
 /// type alias for Result<T, Error>
 pub type Result<T> = result::Result<T, Error>;
