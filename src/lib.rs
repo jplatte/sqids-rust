@@ -69,7 +69,8 @@ pub const DEFAULT_ALPHABET: &str = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQR
 
 /// Returns the default blocklist when none is given when creating a [Sqids].
 pub fn default_blocklist() -> HashSet<String> {
-	serde_json::from_str(include_str!("blocklist.json")).unwrap()
+	const DEFAULT_BLOCKLIST: &[&str] = &include!("blocklist.json");
+	DEFAULT_BLOCKLIST.iter().map(|&s| s.to_owned()).collect()
 }
 
 /// Options for creating a [Sqids].
