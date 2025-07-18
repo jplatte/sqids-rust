@@ -12,7 +12,6 @@ pub const LICENSE: () = ();
 
 use std::{cmp::min, collections::HashSet, result};
 
-use derive_builder::Builder;
 use thiserror::Error;
 
 /// sqids Error type.
@@ -119,15 +118,10 @@ impl Default for Options {
 }
 
 /// A generator for sqids.
-#[derive(Clone, Debug, Builder)]
-#[builder(build_fn(skip, error = "Error"), pattern = "owned")]
+#[derive(Clone, Debug)]
 pub struct Sqids {
-	/// The alphabet that is being used when generating sqids.
 	alphabet: Vec<char>,
-	/// The minimum length of a sqid.
 	min_length: u8,
-	/// Blocklist. When creating a sqid strings that begins
-	/// with one of these will be avoided.
 	blocklist: HashSet<String>,
 }
 
@@ -137,10 +131,34 @@ impl Default for Sqids {
 	}
 }
 
+/// Builder for [`Sqids`].
+#[derive(Default)]
+pub struct SqidsBuilder {
+	alphabet: Option<Vec<char>>,
+	min_length: Option<u8>,
+	blocklist: Option<HashSet<String>>,
+}
+
 impl SqidsBuilder {
 	/// Create a [SqidsBuilder].
 	pub fn new() -> Self {
 		Self::default()
+	}
+
+	/// The alphabet that is being used when generating sqids.
+	pub fn alphabet(self, value: Vec<char>) -> Self {
+		Self { alphabet: Some(value), ..self }
+	}
+
+	/// The minimum length of a sqid.
+	pub fn min_length(self, value: u8) -> Self {
+		Self { min_length: Some(value), ..self }
+	}
+
+	/// Blocklist. When creating a sqid strings that begins
+	/// with one of these will be avoided.
+	pub fn blocklist(self, value: HashSet<String>) -> Self {
+		Self { blocklist: Some(value), ..self }
 	}
 
 	/// Build a [Sqids] object.
