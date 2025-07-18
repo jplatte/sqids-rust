@@ -12,6 +12,5 @@ keywords = ["ids", "encode", "short", "sqids", "hashids"]
 
 [dependencies]
 derive_builder = "0.20.2"
-serde = "1.0.217"
 serde_json = "1.0.134"
 thiserror = "2.0.9"
